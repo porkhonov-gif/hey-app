@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content=".hey" />
+  <meta name="theme-color" content="#F5F0E8" />
+  <title>.hey</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0E8;
+      --warm-white: #FDFAF5;
+      --ink: #1A1714;
+      --ink-soft: #3D3830;
+      --muted: #9E9589;
+      --muted-light: #C8C2B8;
+      --accent: #C17D4A;
+      --accent-soft: #E8D5BF;
+      --border: rgba(26,23,20,0.1);
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── ONBOARDING ── */
+    #onboarding {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .ob-logo {
+      font-family: var(--serif);
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .ob-title {
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      max-width: 280px;
+    }
+
+    .ob-sub {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 260px;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .ob-input-wrap {
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+
+    .ob-input {
+      width: 100%;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: var(--sans);
+      font-size: 16px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+    }
+
+    .ob-input::placeholder { color: var(--muted-light); }
+    .ob-input:focus { border-color: var(--accent); }
+
+    .ob-btn {
+      width: 100%;
+      max-width: 300px;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+
+    .ob-btn:hover { opacity: 0.85; }
+    .ob-btn:active { transform: scale(0.98); }
+
+    /* ── MAIN APP ── */
+    #main { display: none; min-height: 100dvh; flex-direction: column; }
+
+    .top-bar {
+      padding: 1.25rem 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .archive-btn {
+      font-size: 12px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 0;
+      transition: color 0.2s;
+    }
+    .archive-btn:hover { color: var(--ink); }
+
+    /* ── CARD ── */
+    .card-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem 1.75rem;
+      width: 100%;
+      max-width: 360px;
+      animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-message {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-question {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .card-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+    }
+
+    /* ── LOCKED STATE ── */
+    .locked-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .locked-card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .locked-greeting {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .locked-sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+      margin-bottom: 2rem;
+    }
+
+    .locked-time {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    /* ── ARCHIVE ── */
+    #archive {
+      display: none;
+      min-height: 100dvh;
+      flex-direction: column;
+    }
+
+    .archive-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--muted);
+      padding: 0;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--ink); }
+
+    .archive-title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+
+    .archive-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .archive-item {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .archive-item-date {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .archive-item-msg {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .archive-item-q {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .archive-empty {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 3rem 0;
+      font-weight: 300;
+    }
+
+    /* ── BOTTOM ── */
+    .bottom-bar {
+      padding: 1rem 1.5rem 2rem;
+      text-align: center;
+    }
+
+    .bottom-text {
+      font-size: 11px;
+      color: var(--muted-light);
+      letter-spacing: 0.06em;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ONBOARDING -->
+  <div id="onboarding">
+    <div class="ob-logo">.hey</div>
+    <h1 class="ob-title">Someone's been thinking about you.</h1>
+    <p class="ob-sub">Every evening, a quiet moment just for you. No noise. No metrics. Just a gentle check-in.</p>
+    <div class="ob-input-wrap">
+      <input class="ob-input" id="name-input" type="text" placeholder="What's your name?" maxlength="30" autocomplete="off" />
+    </div>
+    <button class="ob-btn" onclick="startApp()">Let's go</button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <div class="top-bar">
+      <div class="logo">.hey</div>
+      <button class="archive-btn" onclick="showArchive()">archive</button>
+    </div>
+
+    <!-- LOCKED (before 19:00) -->
+    <div class="locked-wrap" id="locked-view">
+      <div class="locked-card">
+        <div class="locked-greeting" id="locked-greeting"></div>
+        <div class="locked-sub" id="locked-sub"></div>
+        <div class="locked-time" id="locked-time"></div>
+      </div>
+    </div>
+
+    <!-- CARD (after 19:00) -->
+    <div class="card-wrap hidden" id="card-view">
+      <div class="card">
+        <div class="card-tag" id="card-tag">evening</div>
+        <div class="card-message" id="card-message"></div>
+        <div class="card-divider" id="card-divider"></div>
+        <div class="card-question" id="card-question"></div>
+        <div class="card-footer">
+          <span class="card-date" id="card-date"></span>
+          <span class="card-dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-text">.hey — still your minute</div>
+    </div>
+  </div>
+
+  <!-- ARCHIVE -->
+  <div id="archive">
+    <div class="archive-header">
+      <button class="back-btn" onclick="hideArchive()">←</button>
+      <div class="archive-title">archive</div>
+    </div>
+    <div class="archive-list" id="archive-list"></div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──
+
+const morningMessages = [
+  (n) => `Good morning, ${n}.`,
+  (n) => `Hey ${n}. Today is yours.`,
+  (n) => `${n}. You showed up. That matters.`,
+  (n) => `Morning, ${n}. Make it count.`,
+  (n) => `The .hey team loves you, ${n}.`,
+  (n) => `Hey ${n} — we're rooting for you today.`,
+  (n) => `${n}. Still here. Still going.`,
+  (n) => `Good morning. You've got this, ${n}.`,
+];
+
+const morningQuestions = [
+  `What's one thing you're looking forward to today?`,
+  `What would make today feel like a win?`,
+];
+
+const eveningCards = [
+  { msg: (n) => `${n}, you made it through today.`, q: `What are you proud of — even if it's something small?` },
+  { msg: (n) => `I see you, ${n}. You're doing more than you think.`, q: `What from today would you carry into tomorrow?` },
+  { msg: (n) => `Today happened. You were in it, ${n}.`, q: `What moment today was truly yours?` },
+  { msg: (n) => `You didn't have to be perfect today, ${n}. You just had to show up.`, q: `What reminded you today that you're on the right path?` },
+  { msg: (n) => `${n}. Another day done. That's not nothing.`, q: `What will you remember from today?` },
+  { msg: (n) => `You are enough, ${n}. Today proved it again.`, q: `What can you thank yourself for today?` },
+  { msg: (n) => `Every ordinary day is a quiet investment, ${n}.`, q: `What gave you energy today — even a little?` },
+  { msg: (n) => `${n}, you don't have to be okay every day. You just have to keep going.`, q: `What stayed with you from today?` },
+  { msg: (n) => `Sometimes just finishing the day is the win, ${n}.`, q: `Is there something today you're grateful for — however small?` },
+  { msg: (n) => `${n}. Quiet strength is still strength.`, q: `What did you do for yourself today — even without noticing?` },
+  { msg: (n) => `Glad you're here, ${n}. Genuinely.`, q: `Who or what warmed you today?` },
+  { msg: (n) => `Days don't always go as planned, ${n}. You were in it anyway.`, q: `What went right today — even a little?` },
+  { msg: (n) => `${n}, you carry more than most people know.`, q: `What gave you confidence today?` },
+  { msg: (n) => `An ordinary day well lived is still a life well lived, ${n}.`, q: `What did you notice about yourself today — something good?` },
+];
+
+const silentCards = [
+  (n) => `${n}.`,
+  (n) => `You made it, ${n}.`,
+  (n) => `Still here. Still you, ${n}.`,
+  (n) => `The .hey team is proud of you, ${n}.`,
+];
+
+const specialDays = {
+  '01-01': { msg: (n) => `Happy New Year, ${n}.`, q: `What do you want this year to feel like?` },
+  '12-25': { msg: (n) => `Merry Christmas, ${n}.`, q: `What are you most grateful for this year?` },
+  '12-31': { msg: (n) => `Last day of the year, ${n}.`, q: `What's one thing this year taught you?` },
+  '02-14': { msg: (n) => `${n}. You deserve love — including from yourself.`, q: `How have you shown love to yourself lately?` },
+  '11-28': { msg: (n) => `${n}. Gratitude looks good on you.`, q: `What are you thankful for right now?` },
+};
+
+// ── UTILS ──
+
+function getName() { return localStorage.getItem('hey_name') || ''; }
+function setName(n) { localStorage.setItem('hey_name', n.trim()); }
+
+function getDayIndex() {
+  const now = new Date();
+  const start = new Date(2024, 0, 1);
+  return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+}
+
+function seededRandom(seed) {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+}
+
+function getMonthDay(d) {
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${m}-${day}`;
+}
+
+function getTimeUntil19() {
+  const now = new Date();
+  const target = new Date();
+  target.setHours(19, 0, 0, 0);
+  const diff = target - now;
+  if (diff <= 0) return null;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h > 0) return `opens in ${h}h ${m}m`;
+  return `opens in ${m}m`;
+}
+
+function isFriday() { return new Date().getDay() === 5; }
+
+function saveArchiveEntry(date, msg, q) {
+  const key = `hey_archive_${date}`;
+  if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, JSON.stringify({ msg, q }));
+  }
+}
+
+// ── CARD LOGIC ──
+
+function getTodayCard(name) {
+  const now = new Date();
+  const dayIdx = getDayIndex();
+  const md = getMonthDay(now);
+
+  // Special day
+  if (specialDays[md]) {
+    const s = specialDays[md];
+    return { type: 'special', msg: s.msg(name), q: s.q };
+  }
+
+  // Friday — sometimes no question
+  if (isFriday() && seededRandom(dayIdx * 7) > 0.5) {
+    const msgs = [
+      `${name}, you worked the whole week. That's real.`,
+      `Friday. You made it through the week, ${name}.`,
+      `Week done, ${name}. Be proud of that.`,
+    ];
+    const idx = Math.floor(seededRandom(dayIdx) * msgs.length);
+    return { type: 'silent', msg: msgs[idx], q: null };
+  }
+
+  // Sometimes a silent card (no question) ~15% of days
+  if (seededRandom(dayIdx * 3) < 0.15) {
+    const idx = Math.floor(seededRandom(dayIdx * 5) * silentCards.length);
+    return { type: 'silent', msg: silentCards[idx](name), q: null };
+  }
+
+  // Regular evening card
+  const idx = dayIdx % eveningCards.length;
+  const c = eveningCards[idx];
+  return { type: 'evening', msg: c.msg(name), q: c.q };
+}
+
+function getMorningCard(name) {
+  const dayIdx = getDayIndex();
+  const msgIdx = dayIdx % morningMessages.length;
+  const msg = morningMessages[msgIdx](name);
+
+  // Rarely add a morning question (~20%)
+  if (seededRandom(dayIdx * 11) < 0.2) {
+    const qIdx = dayIdx % morningQuestions.length;
+    return { msg, q: morningQuestions[qIdx] };
+  }
+  return { msg, q: null };
+}
+
+// ── RENDER ──
+
+function renderMain() {
+  const name = getName();
+  const now = new Date();
+  const hour = now.getHours();
+  const UNLOCK = 19;
+
+  const locked = document.getElementById('locked-view');
+  const cardView = document.getElementById('card-view');
+
+  if (hour < UNLOCK) {
+    // Show morning card + countdown
+    locked.classList.remove('hidden');
+    cardView.classList.add('hidden');
+
+    const morning = getMorningCard(name);
+    document.getElementById('locked-greeting').textContent = morning.msg;
+
+    if (morning.q) {
+      document.getElementById('locked-sub').textContent = morning.q;
+    } else {
+      document.getElementById('locked-sub').textContent = `Your evening reflection opens at 7 PM.`;
+    }
+
+    const timeStr = getTimeUntil19();
+    document.getElementById('locked-time').textContent = timeStr || 'opens soon';
+  } else {
+    // Show evening card
+    locked.classList.add('hidden');
+    cardView.classList.remove('hidden');
+
+    const today = getTodayCard(name);
+    document.getElementById('card-message').textContent = today.msg;
+
+    const divider = document.getElementById('card-divider');
+    const qEl = document.getElementById('card-question');
+
+    if (today.q) {
+      divider.style.display = '';
+      qEl.style.display = '';
+      qEl.textContent = today.q;
+    } else {
+      divider.style.display = 'none';
+      qEl.style.display = 'none';
+    }
+
+    document.getElementById('card-tag').textContent =
+      today.type === 'special' ? 'special day' :
+      today.type === 'silent' ? 'hey' : 'evening';
+
+    document.getElementById('card-date').textContent = formatDate(now);
+
+    // Save to archive
+    saveArchiveEntry(formatDate(now), today.msg, today.q);
+  }
+}
+
+// ── ARCHIVE ──
+
+function showArchive() {
+  document.getElementById('main').style.display = 'none';
+  const arch = document.getElementById('archive');
+  arch.style.display = 'flex';
+
+  const list = document.getElementById('archive-list');
+  list.innerHTML = '';
+
+  const keys = Object.keys(localStorage)
+    .filter(k => k.startsWith('hey_archive_'))
+    .sort().reverse();
+
+  if (keys.length === 0) {
+    list.innerHTML = `<div class="archive-empty">Nothing here yet.<br>Come back after your first evening.</div>`;
+    return;
+  }
+
+  keys.forEach(key => {
+    const dateStr = key.replace('hey_archive_', '');
+    const data = JSON.parse(localStorage.getItem(key));
+    const item = document.createElement('div');
+    item.className = 'archive-item';
+    item.innerHTML = `
+      <div class="archive-item-date">${dateStr}</div>
+      <div class="archive-item-msg">${data.msg}</div>
+      ${data.q ? `<div class="archive-item-q">${data.q}</div>` : ''}
+    `;
+    list.appendChild(item);
+  });
+}
+
+function hideArchive() {
+  document.getElementById('archive').style.display = 'none';
+  document.getElementById('main').style.display = 'flex';
+}
+
+// ── ONBOARDING ──
+
+function startApp() {
+  const input = document.getElementById('name-input');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+  setName(name);
+  document.getElementById('onboarding').style.display = 'none';
+  document.getElementById('main').style.display = 'flex';
+  renderMain();
+}
+
+document.getElementById('name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startApp();
+});
+
+// ── INIT ──
+
+function init() {
+  const name = getName();
+  if (name) {
+    document.getElementById('onboarding').style.display = 'none';
+    document.getElementById('main').style.display = 'flex';
+    renderMain();
+  }
+  // Refresh every minute
+  setInterval(renderMain, 60000);
+}
+
+init();
+</script>
+</body>
+</html>
